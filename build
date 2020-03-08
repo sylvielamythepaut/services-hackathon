@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -e
+
+me="$(basename $0)"
+
+worker_dir="$1"
+if [ -z "$worker_dir" ] ; then
+  echo "Usage: $me <worker-dir>"
+  exit 1
+fi
+
+if [ ! -d "$worker_dir" ] ; then
+  echo "${me}: Not a directory"
+  exit 1
+fi
+worker_dir="$(cd $worker_dir && pwd)"
+
+worker_name="$(echo $(basename $worker_dir) | tr _ -)"
+
+if [ -r "${HOME}/.netrc" ] ; then
+  secret="--secret id=netrc,source=${HOME}/.netrc"
+else
+  secret=""
+fi
+
+if [ -n "$no_cache" ] ; then
+  no_cache="--no-cache"
+fi
+
+set -x
+
+base_tag="${base_tag:-latest}"
+
+for os in debian ; do
+  image="eccr-dev.ecmwf.int/servicelib/worker-${worker_name}:${base_tag}"
+
+  # Ensure we have the base image.
+  docker pull eccr-dev.ecmwf.int/servicelib/servicelib-${os}:${base_tag}
+
+  env DOCKER_BUILDKIT=1 \
+    docker build \
+      --tag $image \
+      --file "${worker_dir}/Dockerfile-${os}" \
+      $secret \
+      $no_cache \
+      --build-arg base_tag=$base_tag \
+      --build-arg http_proxy=$http_proxy \
+      --build-arg https_proxy=$https_proxy \
+      --build-arg ftp_proxy=$ftp_proxy \
+      --build-arg no_proxy=$no_proxy \
+      ${worker_dir}
+done
