@@ -39,7 +39,7 @@ You need to be able to pull it in order to build these examples. Log in with
 your usual ECMWF user name and password.
 
 The X.509 certificate for `eccr-dev.ecmwf.int` has been issued by the
-[QuoVadis Global SSL ICA G3](https://www.quovadisglobal.com/QVRepository/DownloadRootsAndCRL/QuoVadisGlobalSSLICAG2-PEM.aspx)
+[QuoVadis Global SSL ICA G3](https://www.quovadisglobal.com/QVRepository/DownloadRootsAndCRL/QuoVadisGlobalSSLICAG3-PEM.aspx)
 certificate authority. You need to install the CA'a certificate in your system.
 
 On Linux:
@@ -48,7 +48,14 @@ On Linux:
     $ sudo cp <the-pem-file-from-above> /etc/docker/certs.d/eccr-dev.ecmwf.int/ca.crt
 
 On Mac: [Add to your keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca2431/mac)
-the PEM file linked above.
+the PEM file linked above. Alternatively, from the command line:
+
+    $ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain <the-pem-file-from-above>
+
+Then you have to restart Docker for Mac.
+
+
+### Log in into `eccr-dev.ecmwf.int`
 
 Once you've added QuoVadis CA cert to your local Docker installation, you need
 to log in before yu may start pulling images. On a terminal, do the following:
