@@ -32,8 +32,8 @@ set -x
 
 base_tag="${base_tag:-latest}"
 
-for os in debian ; do
-  image="eccr-dev.ecmwf.int/servicelib/worker-${worker_name}:${base_tag}"
+for os in centos7 debian ; do
+  image="eccr-dev.ecmwf.int/servicelib/worker-${worker_name}-${os}:${base_tag}"
 
   # Ensure we have the base image.
   docker pull eccr-dev.ecmwf.int/servicelib/servicelib-${os}:${base_tag}
@@ -45,6 +45,7 @@ for os in debian ; do
       $secret \
       $no_cache \
       --build-arg base_tag=$base_tag \
+      --build-arg os=$os \
       --build-arg http_proxy=$http_proxy \
       --build-arg https_proxy=$https_proxy \
       --build-arg ftp_proxy=$ftp_proxy \

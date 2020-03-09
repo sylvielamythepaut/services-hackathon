@@ -18,6 +18,7 @@ worker_dir="$(cd $worker_dir && pwd)"
 
 worker_name="$(echo $(basename $worker_dir) | tr _ -)"
 image_tag="${base_tag:-latest}"
+os="${os:-debian}"
 
 scratch_dir=/tmp/servicelib-worker-${worker_name}
 
@@ -34,4 +35,4 @@ docker run \
   --volume ${scratch_dir}:/var/cache/servicelib \
   --publish 8000:8000 \
   --read-only \
-  eccr-dev.ecmwf.int/servicelib/worker-${worker_name}:${image_tag}
+  eccr-dev.ecmwf.int/servicelib/worker-${worker_name}-${os}:${image_tag}
