@@ -1,0 +1,72 @@
+swagger: '2.0'
+info:
+  description: This is a simple API
+  version: 1.0.0
+  title: Simple Inventory API
+  # put the contact info for your development or API team
+  contact:
+    email: you@your-company.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags are used for organizing operations
+tags:
+- name: bonjour
+  description: say hello to people
+
+
+paths:
+  /bonjour:
+    post:
+      tags:
+      - bonjour
+      summary: Say hello to friends
+      operationId: hello_multi.bonjour
+      description: Adds an item to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: name
+        description: name
+        schema:
+          $ref: '#/definitions/person'
+      responses:
+        200:
+          description: greetings
+          schema:
+            $ref: '#/definitions/greetings'
+        400:
+          description: invalid input, object invalid
+        
+definitions:
+  person:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        example: Sylvie
+     
+  greetings:
+    required:
+    - greeting
+    - mention
+    properties:
+      greeting:
+        type: string
+        example: Bonjour
+      mention:
+        type: string
+        example:  Sylvie
+
+# Added by API Auto Mocking Plugin
+host: localhost:8000
+basePath: /services/
+schemes:
+ - http
