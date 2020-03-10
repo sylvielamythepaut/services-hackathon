@@ -19,7 +19,7 @@ You can use the swagger editor to draft you schema at https://editor.swagger.io/
 ### Display Schema-Yaml in Browser
 Assuming you have your schema file at `/localdirectory/my-app/openapi/openapi_myapp.yaml`. You can run the swagger-ui Docker image and mount the local directory into the container:
 ```bash
-docker run --rm -p 8083:8080 -v /localdirectory/my-app/openapi/:/yaml/ --env SWAGGER_JSON=/yaml/openapi_myapp.yaml swaggerapi/swagger-ui:v3.25.0
+docker run --rm -p 8083:8080 -v /localdirectory/my-app/openapi/openapi_myapp.yaml:/yaml/openapi.yaml --env SWAGGER_JSON=/yaml/openapi.yaml swaggerapi/swagger-ui:v3.25.0
 ```
 You can now access an interactive website with your schema and the ability to test your api via http://localhost:8083 .
 
