@@ -2,7 +2,7 @@
 
 ARG base_tag
 
-FROM ecmwf/magics:4.2.6 AS build 
+FROM ecmwf/magics:latest AS build 
 
 # Open current image for working:
 FROM eccr-dev.ecmwf.int/servicelib/servicelib:${base_tag}

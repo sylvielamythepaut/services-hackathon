@@ -13,7 +13,7 @@ import netCDF4 as nc
 
 
 
-def plotslice(context, source):
+def plotslice(context, source, variable):
     local_source = context.get_data(source)
 
     result = context.create_result('.png')
@@ -24,30 +24,38 @@ def plotslice(context, source):
                 output_name_first_page_number = "off"
         )
     
+    lat_varname = 'lat'
+    lon_varname = 'lon'
+    plev_varname = 'p_lev'
+
     # Definition of the netCDF data and interpretation
     # Populate the following from meta
-    data = mnetcdf(netcdf_filename = result.path,
-      netcdf_value_variable = "p13820121030000000000001",
-      netcdf_field_scaling_factor = 100000.,
-      netcdf_y_variable = "levels",
-      netcdf_x_variable = "longitude",
-      netcdf_x_auxiliary_variable = "latitude"
+    data = mnetcdf(netcdf_filename = source,
+      netcdf_value_variable = variable,
+      #netcdf_field_scaling_factor = scale_factor,
+      netcdf_y_variable = plev_varname,
+      netcdf_x_variable = lon_varname,
+      netcdf_x_auxiliary_variable = lat_varname
     )
-
+    
+    # file variable names from input
     inf = nc.Dataset(local_source, 'r')
-
+    latmin,latmax = inf.variables[lat_varname][0], inf.variables[lat_varname][-1]
+    lonmin,lonmax = inf.variables[lon_varname][0], inf.variables[lon_varname][-1]
+    plevmin,plevmax = inf.variables[plev_varname][0], inf.variables[plev_varname][-1]
+    inf.close()
     
     # Setting the cartesian view
     projection = mmap(
         subpage_map_projection='cartesian',
         subpage_x_axis_type='geoline',
-        subpage_y_axis_type='logarithmic',
-        subpage_x_min_latitude=50.,  # Popoulate from metadata?
-        subpage_x_max_latitude=30.,
-        subpage_x_min_longitude=-90.,
-        subpage_x_max_longitude=-60.,
-        subpage_y_min=1020.,
-        subpage_y_max=200.,
+        subpage_y_axis_type='logarithmic',   # Populate from metadata?
+        subpage_x_min_latitude=latmin,  
+        subpage_x_max_latitude=latmax,
+        subpage_x_min_longitude=lonmin,
+        subpage_x_max_longitude=lonmax,
+        subpage_y_min=plevmin,
+        subpage_y_max=plevmax,
         )
     # Vertical axis
     vertical = maxis(
@@ -76,6 +84,7 @@ def plotslice(context, source):
         axis_grid_thickness=1,
         axis_grid_line_style='dash',
         )
+    
     contour = mcont()
     plot(output, projection, horizontal, vertical, data, contour)    
 
@@ -90,3 +99,4 @@ def main():
     service.start_services(
 	    {"name": "plotslice", "execute": plotslice},
 	    )
+
