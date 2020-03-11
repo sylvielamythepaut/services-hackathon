@@ -9,15 +9,14 @@ FROM ecmwf/magics:4.2.6 AS build
 # Open current image for working:
 FROM eccr-dev.ecmwf.int/servicelib/servicelib-${os}:${base_tag}
 
-# Copy the Python services code.
-COPY *.py /code/services/plot_slice/
-
-# Copy the default configuration file
-COPY servicelib.ini /etc/servicelib.ini
+USER root
 
 # Install run-time depencencies.
 # Delete resources after installation
-RUN set -ex \
+RUN \ 
+  --mount=type=cache,target=/var/cache/apt,id=apt-cache,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,id=apt-lib,sharing=locked \
+   set -ex \
     && apt-get update \
     && apt-get install --yes --no-install-suggests --no-install-recommends \
        ca-certificates \
@@ -91,3 +90,10 @@ ENV \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+# Copy the Python services code.
+COPY *.py /code/services/plot_slice/
+
+# Copy the default configuration file
+COPY servicelib.ini /etc/servicelib.ini
+
+USER worker
