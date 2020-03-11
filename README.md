@@ -1,7 +1,8 @@
 # Generating the templates:
 
 pip install git+https://github.com/sylvielamythepaut/swagger-py-codegen.git
-swagger_py_codegen --swagger-doc my-api.yaml my-api -tlp servicelib
+  
+swagger_py_codegen --swagger-doc *my-api.yaml* *my-api* -tlp servicelib
 
 # `servicelib` examples
 
@@ -97,7 +98,7 @@ On Linux:
     password <your-password>
     EOF
 
-On Mac: I don't know, but the snippet above might work.
+On Mac: I don't know, but the snippet above might work. -   
 
 
 ### Build the worker images
