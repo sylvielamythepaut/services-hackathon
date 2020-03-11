@@ -32,11 +32,12 @@ set -x
 
 base_tag="${base_tag:-latest}"
 
-for os in centos7 debian ; do
+for os in debian ; do
   image="eccr-dev.ecmwf.int/servicelib/worker-${worker_name}-${os}:${base_tag}"
 
   # Ensure we have the base image.
   docker pull eccr-dev.ecmwf.int/servicelib/servicelib-${os}:${base_tag}
+
 
   env DOCKER_BUILDKIT=1 \
     docker build \
