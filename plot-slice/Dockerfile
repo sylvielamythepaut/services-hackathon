@@ -1,13 +1,11 @@
 # syntax=docker/dockerfile:experimental
 
 ARG base_tag
-ARG os
-
 
 FROM ecmwf/magics:4.2.6 AS build 
 
 # Open current image for working:
-FROM eccr-dev.ecmwf.int/servicelib/servicelib-${os}:${base_tag}
+FROM eccr-dev.ecmwf.int/servicelib/servicelib:${base_tag}
 
 USER root
 
@@ -75,13 +73,13 @@ RUN \
     && rm -rf /var/lib/apt/lists/*
 
 
-# Copy Python run-time and ECMWF softwate.
+## Copy Python run-time and ECMWF softwate.
 COPY --from=build /usr/local/share/eccodes/ /usr/local/share/eccodes/
 COPY --from=build /usr/local/share/magics/ /usr/local/share/magics/
 COPY --from=build /usr/local/bin/ /usr/local/bin/
 COPY --from=build /usr/local/lib/ /usr/local/lib/
 
-# Ensure shared libs installed by the previous step are available.
+## Ensure shared libs installed by the previous step are available.
 RUN set -ex \
     && /sbin/ldconfig
 
