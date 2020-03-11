@@ -26,7 +26,7 @@ def retrieve(context, arg):
     # x = float(arg)
     print('respath', type(res.path))
     arg['target'] = str(res.path)
-    server = ECMWFDataServer(url="https://api.ecmwf.int/v1",key="9182bc70a68dd50cee8ee720d3d69bc8",email="Iain.Russell@ecmwf.int")    
+    server = ECMWFDataServer()    
     server.retrieve(arg)
     #orig_fname = "/code/services/retrieve/t.grib"
     #new_fname = res.path

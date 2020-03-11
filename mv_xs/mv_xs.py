@@ -18,9 +18,12 @@ import metview as mv
 
 def run_mv(context, arg):
     print("args", arg)
-    fname = context.get_data(arg)
-    arg.pop("location")
-    arg.pop("contentLength")
+    print("file=", arg["file"])
+    fname = context.get_data(arg["file"])
+    print("fname=", fname)
+    #arg.pop("location")
+    #arg.pop("contentLength")
+    arg.pop("file")
     params = arg
     res = context.create_result("application/x-netcdf")
     print("res={}".format(res))

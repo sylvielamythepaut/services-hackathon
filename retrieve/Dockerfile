@@ -33,3 +33,5 @@ COPY *.py /code/services/retrieve/
 
 # Copy the default configuration file
 COPY servicelib.ini /etc/servicelib.ini
+
+USER worker
