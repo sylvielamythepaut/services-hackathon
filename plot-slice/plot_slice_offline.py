@@ -32,6 +32,7 @@ def plotslice(context, source, variable):
     # Populate the following from meta
     data = mnetcdf(netcdf_filename = source,
       netcdf_value_variable = variable,
+      netcdf_type = "matrix",
       #netcdf_field_scaling_factor = scale_factor,
       netcdf_y_variable = plev_varname,
       netcdf_x_variable = lon_varname,
@@ -40,11 +41,13 @@ def plotslice(context, source, variable):
     print(data)
     
     # file variable names from input
-    #inf = nc.Dataset(local_source, 'r')
-    #latmin,latmax = inf.variables[lat_varname][0], inf.variables[lat_varname][-1]
-    #lonmin,lonmax = inf.variables[lon_varname][0], inf.variables[lon_varname][-1]
-    #plevmax,plevmin = inf.variables[plev_varname][0,0], inf.variables[plev_varname][-1,-1]
-    #inf.close()
+    inf = nc.Dataset(local_source, 'r')
+    latmin,latmax = inf.variables[lat_varname][0], inf.variables[lat_varname][-1]
+    lonmin,lonmax = inf.variables[lon_varname][0], inf.variables[lon_varname][-1]
+    plevmax,plevmin = inf.variables[plev_varname][0,0], inf.variables[plev_varname][-1,-1]
+    ##inf.close()
+
+    print(type(latmin))
     latmin,latmax = 30, 50
     lonmin,lonmax = 10, 40
     plevmax,plevmin = 10, 1000
