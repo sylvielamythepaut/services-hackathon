@@ -1,0 +1,86 @@
+swagger: '2.0'
+info:
+  description: This is an API for plotting slices of data
+  version: 1.0.0
+  title: Plot Slice
+  # put the contact info for your development or API team
+  contact:
+    email: you@your-company.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags are used for organizing operations
+tags:
+- name: visualisation
+  description: Make a pretty picture of some pretty data
+
+
+paths:
+  /plot-slice:
+    post:
+      tags:
+      - visualisation
+      summary: Say hello to friends
+      operationId: bonjour
+      description: Adds an item to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: locations
+        description: local or remote object for a slice of data
+        schema:
+          type: array
+          items: 
+            $ref: '#/definitions/location'
+      responses:
+        200:
+          description: plotted slice of data
+          schema:
+            $ref: '#/definitions/image'
+        400:
+          description: invalid input, object invalid
+        
+definitions:
+  location:
+    type: object
+    required:
+    - location
+      contentType
+      contentLength
+    properties:
+      location:
+        type: string
+        example: /path/to/remote/or/local/input/file
+      contentType:
+        type: string
+        example: application/x-netcdf
+      contentLength: 
+        type: int
+        example: 42
+
+  image:
+    required:
+    - location
+      contentType
+      contentLength
+    properties:
+      location:
+        type: string
+        example: /path/to/remote/or/local/output/file
+      contentType:
+        type: string
+        example: image/png
+      contentLength: 
+        type: int
+        example: 42
+
+# Added by API Auto Mocking Plugin
+host: localhost:8000
+basePath: /services/
+schemes:
+ - http
