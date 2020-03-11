@@ -1,9 +1,7 @@
 # Generating the templates:
 
-clone https://github.com/sylvielamythepaut/swagger-py-codegen.git
-
-
-swagger_py_codegen --swagger-doc multi-hello-api.yaml multi_hello -tlp servicelib
+pip install git+https://github.com/sylvielamythepaut/swagger-py-codegen.git
+swagger_py_codegen --swagger-doc my-api.yaml my-api -tlp servicelib
 
 # `servicelib` examples
 
