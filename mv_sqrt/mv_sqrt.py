@@ -21,12 +21,9 @@ def run_mv(context, arg):
     fname = context.get_data(arg)
     arg.pop("location")
     params = arg
-    #fname = "/var/cache/servicelib/t_fc24.grib"
-    # res = context.create_result("application/json")
-    res = context.create_result(".nc")
+    res = context.create_result("application/x-netcdf")
     print("res={}".format(res))
-    # x = float(arg)
-    
+
     macro_txt = """
     #Metvie macro
 f = read("{}")
@@ -54,7 +51,7 @@ write("{}", nc)
     cmd = "metview -slog -nocreatehome -b {}".format(macro_file)
     print("cmd=", cmd)
     os.system(cmd)
-    print('status=', os.path.exists(res.path))
+    print('res file status=', os.path.exists(res.path))
 
     return res
 
@@ -68,17 +65,6 @@ write("{}", nc)
     #     line         = [-40.1, -105.6, 61.5, 85.1], #lat,lon,lat,lon
     #     data = f
     # )
-
-    nc = f
-    print("loc", res.path)
-    print(type(nc))
-    # os.system("touch " + os.path.dirname(res.path) + "/hello.txt")
-    mv.write(res.path, nc)
-    print("WRITTEN")
-    # res["value"] = x
-    return res
-    # return json.dumps({"value": mv.sqrt(x)})
-    # return str(mv.sqrt(x))
 
 
 def main():
