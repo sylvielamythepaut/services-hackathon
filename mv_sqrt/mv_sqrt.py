@@ -6,25 +6,61 @@ import json
 import sys, os
 
 os.environ["METVIEW_PYTHON_START_CMD"] = "/opt/conda/bin/metview"
+os.environ["PATH"] = os.getenv("PATH") + ":/opt/conda/bin"
 # os.environ["METVIEW_DEBUG"] = "1"
-print('TMPDIR={}'.format(os.getenv("TMPDIR")))
+print("TMPDIR={}".format(os.getenv("TMPDIR")))
+print("PATH={}".format(os.getenv("PATH")))
 
 from servicelib.process import Process
 import json
-import metview as mv
+#import metview as mv
+
 
 def run_mv(context, arg):
-    print(arg)
-    #fname = context.get_data(arg)
-    fname = "/var/cache/servicelib/T_an+T_fc48"
-    #res = context.create_result("application/json")
+    print("args", arg)
+    fname = context.get_data(arg)
+    arg.pop("location")
+    params = arg
+    #fname = "/var/cache/servicelib/t_fc24.grib"
+    # res = context.create_result("application/json")
     res = context.create_result(".nc")
-    print('res={}'.format(res))
-    #x = float(arg)
+    print("res={}".format(res))
+    # x = float(arg)
+    
+    macro_txt = """
+    #Metvie macro
+f = read("{}")
 
-    #f = mv.read("/var/cache/servicelibT_an+T_fc48")
-    #f = mv.read(arg["path"])
-    f = mv.read(fname)
+nc = mcross_sect(
+    bottom_level : {},
+    top_level    : {},
+    line         : {},
+    data : f
+)
+
+write("{}", nc)
+""".format(
+    fname, 
+    params.get("bottom_level", 1000),
+    params.get("top_level", 50),
+    params.get("line", "[0, -180, 0, 180]"),
+    res.path)
+
+    print("macro_txt=", macro_txt)
+    macro_file = "/var/cache/servicelib/xs.mv"
+    with open(macro_file, "w") as f:
+        f.write(macro_txt)
+
+    cmd = "metview -slog -nocreatehome -b {}".format(macro_file)
+    print("cmd=", cmd)
+    os.system(cmd)
+    print('status=', os.path.exists(res.path))
+
+    return res
+
+    # f = mv.read("/var/cache/servicelibT_an+T_fc48")
+    # f = mv.read(arg["path"])
+    #f = mv.read(fname)
 
     # nc = mv.mcross_sect(
     #     #bottom_level = 1000.0,
@@ -36,19 +72,20 @@ def run_mv(context, arg):
     nc = f
     print("loc", res.path)
     print(type(nc))
-    #os.system("touch " + os.path.dirname(res.path) + "/hello.txt")
+    # os.system("touch " + os.path.dirname(res.path) + "/hello.txt")
     mv.write(res.path, nc)
     print("WRITTEN")
-    #res["value"] = x
+    # res["value"] = x
     return res
-    #return json.dumps({"value": mv.sqrt(x)})
+    # return json.dumps({"value": mv.sqrt(x)})
     # return str(mv.sqrt(x))
+
 
 def main():
     from servicelib import service
 
-    service.start_services(
-        {"name": "mv_sqrt", "execute": run_mv}
-    )
+    service.start_services({"name": "mv_sqrt", "execute": run_mv})
+
+
 # if __name__ == "__main__":
 #     print(run_mv(None, 23))
