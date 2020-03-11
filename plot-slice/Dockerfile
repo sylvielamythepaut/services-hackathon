@@ -91,6 +91,11 @@ ENV \
 # Copy the Python services code.
 COPY *.py /code/services/plot_slice/
 
+# Copy the swagger yaml
+COPY swagger.yaml /code/services/
+
+RUN pip install netCDF4
+
 # Copy the default configuration file
 COPY servicelib.ini /etc/servicelib.ini
 
