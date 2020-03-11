@@ -9,12 +9,12 @@
 
 import os
 from Magics.macro import *
-
+import netCDF4 as nc
 
 
 
 def plotslice(context, source):
-    source = context.get_data(source)
+    local_source = context.get_data(source)
 
     result = context.create_result('.png')
 
@@ -23,12 +23,26 @@ def plotslice(context, source):
                 output_name = os.path.basename(result.path),
                 output_name_first_page_number = "off"
         )
+    
+    # Definition of the netCDF data and interpretation
+    # Populate the following from meta
+    data = mnetcdf(netcdf_filename = result.path,
+      netcdf_value_variable = "p13820121030000000000001",
+      netcdf_field_scaling_factor = 100000.,
+      netcdf_y_variable = "levels",
+      netcdf_x_variable = "longitude",
+      netcdf_x_auxiliary_variable = "latitude"
+    )
+
+    inf = nc.Dataset(local_source, 'r')
+
+    
     # Setting the cartesian view
     projection = mmap(
         subpage_map_projection='cartesian',
         subpage_x_axis_type='geoline',
         subpage_y_axis_type='logarithmic',
-        subpage_x_min_latitude=50.,
+        subpage_x_min_latitude=50.,  # Popoulate from metadata?
         subpage_x_max_latitude=30.,
         subpage_x_min_longitude=-90.,
         subpage_x_max_longitude=-60.,
@@ -62,14 +76,6 @@ def plotslice(context, source):
         axis_grid_thickness=1,
         axis_grid_line_style='dash',
         )
-    # Definition of the netCDF data and interpretation
-    data = mnetcdf(netcdf_filename = result.path,
-      netcdf_value_variable = "p13820121030000000000001",
-      netcdf_field_scaling_factor = 100000.,
-      netcdf_y_variable = "levels",
-      netcdf_x_variable = "longitude",
-      netcdf_x_auxiliary_variable = "latitude"
-    )
     contour = mcont()
     plot(output, projection, horizontal, vertical, data, contour)    
 
