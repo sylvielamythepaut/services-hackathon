@@ -31,25 +31,20 @@ fi
 set -x
 
 base_tag="${base_tag:-latest}"
+image="eccr-dev.ecmwf.int/servicelib/worker-${worker_name}:${base_tag}"
 
-for os in debian ; do
-  image="eccr-dev.ecmwf.int/servicelib/worker-${worker_name}-${os}:${base_tag}"
+# Ensure we have the base image.
+docker pull eccr-dev.ecmwf.int/servicelib/servicelib:${base_tag}
 
-  # Ensure we have the base image.
-  docker pull eccr-dev.ecmwf.int/servicelib/servicelib-${os}:${base_tag}
-
-
-  env DOCKER_BUILDKIT=1 \
-    docker build \
-      --tag $image \
-      --file "${worker_dir}/Dockerfile-${os}" \
-      $secret \
-      $no_cache \
-      --build-arg base_tag=$base_tag \
-      --build-arg os=$os \
-      --build-arg http_proxy=$http_proxy \
-      --build-arg https_proxy=$https_proxy \
-      --build-arg ftp_proxy=$ftp_proxy \
-      --build-arg no_proxy=$no_proxy \
-      ${worker_dir}
-done
+env DOCKER_BUILDKIT=1 \
+  docker build \
+    --tag $image \
+    --file "${worker_dir}/Dockerfile" \
+    $secret \
+    $no_cache \
+    --build-arg base_tag=$base_tag \
+    --build-arg http_proxy=$http_proxy \
+    --build-arg https_proxy=$https_proxy \
+    --build-arg ftp_proxy=$ftp_proxy \
+    --build-arg no_proxy=$no_proxy \
+    ${worker_dir}
