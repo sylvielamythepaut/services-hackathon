@@ -35,4 +35,4 @@ docker run \
   --volume ${scratch_dir}:/var/cache/servicelib \
   --publish 8000:8000 \
   --read-only \
-  eccr-dev.ecmwf.int/servicelib/worker-${worker_name}-${os}:${image_tag}
+  eccr-dev.ecmwf.int/servicelib/worker-${worker_name}:${image_tag}
