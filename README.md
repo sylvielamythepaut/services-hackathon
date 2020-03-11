@@ -123,3 +123,6 @@ will run the Debian image for worker `hello`. If you want to run the CentOS 7
 image, do instead:
 
     $ env os=centos7 ./run hello
+
+# Example swagger commands:
+swagger_py_codegen --swagger-doc magics-plot-api.yaml plot-slice -tlp servicelib
