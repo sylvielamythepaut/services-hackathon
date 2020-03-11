@@ -20,7 +20,7 @@ def plotslice(context, source):
 
     output = output(   
                 output_formats = ['png'],
-                output_name = os.path.basname(result.path),
+                output_name = os.path.basename(result.path),
                 output_name_first_page_number = "off"
         )
     # Setting the cartesian view
