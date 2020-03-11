@@ -8,7 +8,7 @@
 
 ARG base_tag
 
-FROM eccr-dev.ecmwf.int/servicelib/servicelib-debian:${base_tag}
+FROM eccr-dev.ecmwf.int/servicelib/servicelib:${base_tag}
 
 # Install ecbuild and other build-time dependencies.
 
@@ -50,3 +50,5 @@ COPY *.py /code/services/mv_sqrt/
 
 # Copy the default configuration file
 COPY servicelib.ini /etc/servicelib.ini
+
+USER worker

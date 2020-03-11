@@ -1,5 +1,3 @@
-
-
 # syntax=docker/dockerfile:experimental
 
 #
@@ -8,7 +6,7 @@
 
 ARG base_tag
 
-FROM eccr-dev.ecmwf.int/servicelib/servicelib-debian:${base_tag}
+FROM eccr-dev.ecmwf.int/servicelib/servicelib:${base_tag}
 
 # Install ecbuild and other build-time dependencies.
 
@@ -22,7 +20,6 @@ RUN \
   curl \
   gpg \
   expat
-
 
 RUN \
   pip install ecmwf-api-client

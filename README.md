@@ -85,11 +85,9 @@ On Linux & Mac OS:
 
 ### Build the worker images
 
-Detailed instructions in each worker directory. In a nutshell, the command
+Detailed instructions in each worker directory. In a nutshell:
 
     $ ./build hello
-
-will build both Debian and CentOS 7 images for worker `hello`.
 
 
 ### Running the worker images
@@ -97,11 +95,6 @@ will build both Debian and CentOS 7 images for worker `hello`.
 Detailed instructions in each worker directory, as well, together with sample
 requests you may do with cURL.
 
-In a nutshell, the command
+In a nutshell:
 
     $ ./run hello
-
-will run the Debian image for worker `hello`. If you want to run the CentOS 7
-image, do instead:
-
-    $ env os=centos7 ./run hello
