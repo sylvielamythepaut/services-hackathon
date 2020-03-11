@@ -13,17 +13,43 @@ info:
 
 # tags are used for organizing operations
 tags:
-- name: bonjour
+- name: greetings
   description: say hello to people
 
 
 paths:
-  /bonjour:
+  /plot/:
     post:
       tags:
-      - bonjour
+      - greetings
       summary: Say hello to friends
-      operationId: hello_multi.bonjour
+      operationId: bonjour
+      description: Adds an item to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: persons
+        description: persons
+        schema:
+          type: array
+          items: 
+            $ref: '#/definitions/person'
+      responses:
+        200:
+          description: greetings
+          schema:
+            $ref: '#/definitions/greetings'
+        400:
+          description: invalid input, object invalid
+  /hello:
+    post:
+      tags:
+      - greetings
+      summary: Say hello to friends
+      operationId: hello
       description: Adds an item to the system
       consumes:
       - application/json
