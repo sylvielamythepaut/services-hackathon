@@ -4,21 +4,10 @@ set -e
 
 me="$(basename $0)"
 
-worker_dir="$1"
-if [ -z "$worker_dir" ] ; then
-  echo "Usage: $me <worker-dir>"
-  exit 1
-fi
-
-if [ ! -d "$worker_dir" ] ; then
-  echo "${me}: Not a directory"
-  exit 1
-fi
-worker_dir="$(cd $worker_dir && pwd)"
+worker_dir="$(cd $(dirname $0) && pwd)"
 
 worker_name="$(echo $(basename $worker_dir) | tr _ -)"
 image_tag="${base_tag:-latest}"
-os="${os:-debian}"
 
 scratch_dir=/tmp/servicelib-worker-${worker_name}
 
@@ -26,15 +15,21 @@ set -x
 mkdir -p $scratch_dir
 chmod 01777 $scratch_dir
 
+#export ECMWF_API_KEY= 
+#export ECMWF_API_EMAIL= 
+ECMWF_API_URL=https://api.ecmwf.int/v1
+
 hostname="${SERVICELIB_RESULTS_HTTP_HOSTNAME:-127.0.0.1}"
 docker run \
   --rm \
   --name worker-${worker_name} \
   --env SERVICELIB_RESULTS_HTTP_HOSTNAME=$hostname \
+  --env ECMWF_API_KEY=$ECMWF_API_KEY \
+  --env ECMWF_API_EMAIL=$ECMWF_API_EMAIL \
+  --env ECMWF_API_URL=$ECMWF_API_URL \
   --volume ${worker_dir}:/code/services/$(basename $worker_dir):ro \
   --volume ${worker_dir}/servicelib.ini:/etc/servicelib.ini:ro \
   --volume ${scratch_dir}:/var/cache/servicelib \
-  --publish 8000:8000 \
+  --publish 8080:8080 \
   --read-only \
   eccr-dev.ecmwf.int/servicelib/worker-${worker_name}:${image_tag}
-

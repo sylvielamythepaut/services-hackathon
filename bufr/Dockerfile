@@ -6,34 +6,34 @@
 
 ARG base_tag
 
-FROM eccr-dev.ecmwf.int/servicelib/servicelib-centos7:${base_tag} AS build
+FROM eccr-dev.ecmwf.int/servicelib/servicelib:${base_tag} AS build
 
 # Install ecbuild and other build-time dependencies.
 
 USER root
 
 RUN \
-  --mount=type=cache,target=/var/cache/yum,id=yum-cache,sharing=locked \
-  set -eux \
-  && sed --in-place -e 's/keepcache=0/keepcache=1/' /etc/yum.conf \
-  && yum install --assumeyes epel-release \
-  && yum repolist --assumeyes \
-  && yum install --assumeyes \
-  cmake3 \
+  --mount=type=cache,target=/var/cache/apt,id=apt-cache,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,id=apt-lib,sharing=locked \
+  set -ex \
+  && apt-get update \
+  && apt-get install --yes --no-install-suggests --no-install-recommends \
+  ca-certificates \
+  cmake \
   gcc \
   git \
-  make \
-  && ln -s /usr/bin/cmake3 /usr/bin/cmake
+  libc-dev \
+  make
 
 RUN \
   --mount=type=cache,target=/src,sharing=shared \
-  --mount=type=cache,target=/build/ecbuild-centos7,sharing=shared \
+  --mount=type=cache,target=/build/ecbuild-debian,sharing=shared \
   --mount=type=secret,id=netrc,target=/root/.netrc \
   set -eux \
   && test -d /src/ecbuild || git clone https://git.ecmwf.int/scm/ecsdk/ecbuild /src/ecbuild \
   && cd /src/ecbuild \
   && git checkout 2020.01.0 \
-  && cd /build/ecbuild-centos7 \
+  && cd /build/ecbuild-debian \
   && cmake /src/ecbuild \
   && make -j $(nproc) \
   && make install
@@ -42,13 +42,13 @@ RUN \
 
 RUN \
   --mount=type=cache,target=/src,sharing=shared \
-  --mount=type=cache,target=/build/eccodes-centos7,sharing=shared \
+  --mount=type=cache,target=/build/eccodes-debian,sharing=shared \
   --mount=type=secret,id=netrc,target=/root/.netrc \
   set -eux \
   && test -d /src/eccodes || git clone https://git.ecmwf.int/scm/eccodes/eccodes /src/eccodes \
   && cd /src/eccodes \
   && git checkout 2020.01.0 \
-  && cd /build/eccodes-centos7 \
+  && cd /build/eccodes-debian \
   && /usr/local/bin/ecbuild \
   -DENABLE_FORTRAN=OFF \
   -DENABLE_PYTHON=OFF \
@@ -60,7 +60,7 @@ RUN \
 # Run-time stage.
 #
 
-FROM eccr-dev.ecmwf.int/servicelib/servicelib-centos7:${base_tag}
+FROM eccr-dev.ecmwf.int/servicelib/servicelib:${base_tag}
 
 # Copy the bits of eccodes that we need.
 COPY --from=build /usr/local/bin/bufr_* /usr/local/bin/

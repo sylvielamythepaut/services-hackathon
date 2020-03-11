@@ -68,7 +68,7 @@ the PEM file linked above. Alternatively, from the command line:
 
     $ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain <the-pem-file-from-above>
 
-Then you have to restart Docker for Mac.
+IMPORTANT: You need to to mark the certificate as trusted by finding it in KeyChain (in "System")! Then you have to restart Docker for Mac.
 
 
 ### Log in into `eccr-dev.ecmwf.int`
@@ -87,7 +87,7 @@ Building the example worker [bufr](./bufr/) requires cloning the ecCodes
 Git repository from within the Docker image build process. One way to let
 Docker do this is by adding your ECMWF credentials to your `~/.netrc`:
 
-On Linux:
+On Linux & Mac OS:
 
     $ touch ~/.netrc
     $ chmod 0600 ~/.netrc
@@ -103,11 +103,9 @@ On Mac: I don't know, but the snippet above might work. -
 
 ### Build the worker images
 
-Detailed instructions in each worker directory. In a nutshell, the command
+Detailed instructions in each worker directory. In a nutshell:
 
     $ ./build hello
-
-will build both Debian and CentOS 7 images for worker `hello`.
 
 
 ### Running the worker images
@@ -115,14 +113,9 @@ will build both Debian and CentOS 7 images for worker `hello`.
 Detailed instructions in each worker directory, as well, together with sample
 requests you may do with cURL.
 
-In a nutshell, the command
+In a nutshell:
 
     $ ./run hello
-
-will run the Debian image for worker `hello`. If you want to run the CentOS 7
-image, do instead:
-
-    $ env os=centos7 ./run hello
 
 # Example swagger commands:
 swagger_py_codegen --swagger-doc magics-plot-api.yaml plot-slice -tlp servicelib
