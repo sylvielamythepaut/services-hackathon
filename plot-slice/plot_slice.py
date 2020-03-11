@@ -63,7 +63,7 @@ def plotslice(context, source):
         axis_grid_line_style='dash',
         )
     # Definition of the netCDF data and interpretation
-    data = mnetcdf(netcdf_filename = result.path,
+    data = mnetcdf(netcdf_filename = source,
       netcdf_value_variable = "p13820121030000000000001",
       netcdf_field_scaling_factor = 100000.,
       netcdf_y_variable = "levels",
