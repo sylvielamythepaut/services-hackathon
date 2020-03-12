@@ -39,8 +39,10 @@ CONTOUR = {
         "contour_gradients_step_list": [1,25,25,50,1],
       }
 
-def plotslice(context, source, variable):
+def plotslice(context, source):
     local_source = context.get_data(source)
+
+    variable = source['netcdf_value_variable']
 
     result = context.create_result('.png')
 
