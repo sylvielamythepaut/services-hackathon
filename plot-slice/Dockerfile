@@ -79,6 +79,11 @@ COPY --from=build /usr/local/share/magics/ /usr/local/share/magics/
 COPY --from=build /usr/local/bin/ /usr/local/bin/
 COPY --from=build /usr/local/lib/ /usr/local/lib/
 
+## pip install Python requirements
+COPY requirements.txt /root/requirements.txt
+RUN \
+  pip install -q -r /root/requirements.txt
+
 ## Ensure shared libs installed by the previous step are available.
 RUN set -ex \
     && /sbin/ldconfig

@@ -1,2 +1,5 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> service version of plot_slice.py
 netCDF4
