@@ -139,7 +139,7 @@ def plotslice(context, source, variable):
 
 
 def main():
-    location = '/perm/ma/maec/Work_Proj/WEB_services_hackathon/servicelib-examples/mv_xs/res.nc'
+    location = './mv_xs/res.nc'
     variable = 't'
     plotslice( {'result':'res'}, location, variable)
 
